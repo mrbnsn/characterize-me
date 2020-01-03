@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Meteor } from 'meteor/meteor';
+import LoginScreen from '/imports/ui/screens/Login';
+import HomeScreen from '/imports/ui/screens/Home';
 
 import { 
   Box, 
@@ -19,54 +22,23 @@ const App = () => {
 
   const [showSidebar, setShowSidebar] = useState(false);
 
+  console.log(Meteor.user());
+  console.log(Meteor.userId());
+
   return (
     <Grommet theme={theme} full>
       <ResponsiveContext.Consumer>
         { size => (
           <Box fill>
             <MainBar onClick={() => setShowSidebar(!showSidebar)} />
-            <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
-              <Box flex align='center' justify='center'>
-                app body
-              </Box>
-              {(!showSidebar || size !== 'small') ? (
-                <Collapsible direction='horizontal' open={showSidebar}>
-                  <Box
-                    flex
-                    width='medium'
-                    background='light-2'
-                    elevation='small'
-                    align='center'
-                    justify='center'
-                  >
-                    sidebar
-                  </Box>
-                </Collapsible>
-              ): (
-                <Layer>
-                  <Box
-                    background='light-2'
-                    tag='header'
-                    justify='end'
-                    align='center'
-                    direction='row'
-                    >
-                      <Button icon={<FormClose />} onClick={() => setShowSidebar(false)} />
-                    </Box>
-                  <Box
-                    fill
-                    background='light-2'
-                    align='center'
-                    justify='center'
-                  >
-                    sidebar
-                  </Box>
-                </Layer>
-              )}
-            </Box>
+            { Meteor.userId() ? (
+              <HomeScreen size={size} showSidebar={showSidebar} onClick={() => setShowSidebar(!showSidebar)} />
+             ) : (
+              <LoginScreen size={size} showSidebar={showSidebar} onClick={() => setShowSidebar(!showSidebar)} /> 
+             )}
           </Box>
         )}
-      </ResponsiveContext.Consumer>~
+      </ResponsiveContext.Consumer>
     </Grommet>
   );
 }
