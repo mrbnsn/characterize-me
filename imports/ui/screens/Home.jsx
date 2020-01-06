@@ -1,65 +1,45 @@
 import React, { useState } from 'react';
+import { Meteor } from 'meteor/meteor';
 
-import { 
-  Box, 
-  Button, 
-  Collapsible, 
-  Grommet,
-  Heading,
-  Layer,
-  ResponsiveContext
-} from 'grommet';
+import { useHistory } from "react-router-dom";
+import { Button } from 'semantic-ui-react';
 
-import { FormClose, Notification } from 'grommet-icons';
+import NewCharacterCard from '/imports/ui/components/cards/NewCharacter';
 
-import MainBar from '/imports/ui/components/MainBar';
-import { theme } from '/lib/globals';
+const Home = (props) => {
 
-const HomeScreen = (props) => {
+  console.log(Meteor.user());
+  console.log(Meteor.userId());
 
-  let { size, showSidebar } = props;
+  let history = useHistory();
+
+  // TODO: use semantic ui grid layout for this.
 
   return (
-    <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
-        <Box flex align='center' justify='center'>
-        dashboard? characters?
-        </Box>
-        {(!showSidebar || size !== 'small') ? (
-        <Collapsible direction='horizontal' open={showSidebar}>
-            <Box
-            flex
-            width='medium'
-            background='light-2'
-            elevation='small'
-            align='center'
-            justify='center'
-            >
-            sidebar? menu?
-            </Box>
-        </Collapsible>
-        ): (
-        <Layer>
-            <Box
-            background='light-2'
-            tag='header'
-            justify='end'
-            align='center'
-            direction='row'
-            >
-                <Button icon={<FormClose />} onClick={() => props.onClick()} />
-            </Box>
-            <Box
-            fill
-            background='light-2'
-            align='center'
-            justify='center'
-            >
-            sidebar
-            </Box>
-        </Layer>
-        )}
-    </Box>
+    <div>
+        <div>
+            <p>Show a list of created character cards here, with a "+" card to create a new one.</p>
+            <NewCharacterCard handleClick={handleCreateCharacter} />
+            <Button color='red' fluid size='small' onClick={handleLogout}>Logout</Button>
+        </div>
+    </div>
   );
+
+  function handleCreateCharacter() {
+    console.log('create character');
+    history.push("/create-character");
+  }
+
+  function handleLogout() {
+    Meteor.logout((err) => {
+      if( !err ) {
+        history.push("/");
+      } else {
+        console.log(err);
+      }
+      
+    });
+  }
 }
 
-export default HomeScreen;
+export default Home;

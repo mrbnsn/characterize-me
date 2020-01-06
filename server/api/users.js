@@ -1,10 +1,8 @@
-import { Accounts } from 'meteor/accounts-base';
-import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor';
 
 Meteor.users.allow({
     update: function( userId, doc, fields, modifier ) {
         let allowed_fields = [
-            'profile',
             'characters',
         ];
 
@@ -16,10 +14,11 @@ Meteor.publish('userData', function() {
     if( this.userId) {
         return Meteor.users.find({ _id: this.userId }, {
             fields: {
-                profile: true,
                 characters: true,
             }
         });
+    } else {
+        this.ready();
     }
 });
 

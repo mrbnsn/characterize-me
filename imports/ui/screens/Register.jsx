@@ -3,31 +3,49 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Link, useHistory } from "react-router-dom";
 
-import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
-import MessageNegative from '/imports/ui/components/messages/MessageNegative';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react';
 
 import { client } from '/client/main';
 
-const Login = (props) => {
+const Register = (props) => {
 
+  const [ firstName, setFirstName ] = useState("");
+  const [ lastName, setLastName ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
-  const [ errorCode, setErrorCode ] = useState();
-  const [ errorMessage, setErrorMessage ] = useState("");
 
   let history = useHistory();
 
   console.log(Meteor.user());
   console.log(client);
+  console.log(history);
 
   return (
     <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as='h2' color='red' textAlign='center'>
-          Sign in to your account
+          Create your account
         </Header>
         <Form size='large' onSubmit={handleSubmit}>
           <Segment stacked>
+            <Form.Input 
+              fluid 
+              icon='address card' 
+              iconPosition='left' 
+              placeholder='First name' 
+              name='firstName'
+              type='text'
+              onChange={handleChange}
+            />
+            <Form.Input 
+              fluid 
+              icon='address card' 
+              iconPosition='left' 
+              placeholder='Last name' 
+              name='lastName'
+              type='text'
+              onChange={handleChange}
+            />
             <Form.Input 
               fluid 
               icon='envelope' 
@@ -47,27 +65,13 @@ const Login = (props) => {
               onChange={handleChange}
             />
             <Button color='red' fluid size='large'>
-              Sign In
+              Register
             </Button>
           </Segment>
         </Form>
-        <Message>
-          New user? <Link to="/register">Register Now</Link>
-        </Message>
-        {showLoginMessage()}
       </Grid.Column>
     </Grid>
   );
-
-  function showLoginMessage() {
-    if( errorCode ) {
-      return (
-        <MessageNegative className="text-left" title="Login Failed">
-          <p>{errorMessage}</p>
-        </MessageNegative>
-      )
-    }
-  }
 
   /**
    * Update input value as it changes.
@@ -77,6 +81,12 @@ const Login = (props) => {
    */
   function handleChange(e, { name, value }) {
     switch( name ) {
+      case "firstName":
+        setFirstName(value);
+        break;
+      case "lastName":
+        setLastName(value);
+        break;
       case "email":
         setEmail(value);
         break;
@@ -89,23 +99,27 @@ const Login = (props) => {
   }
 
   /**
-   * Log in with provided credentials.
+   * Create account with provided user data.
    * 
    */
   function handleSubmit() {
 
-    Meteor.loginWithPassword(email, password, (err, res) => {
-      if( !err ) {
-        setErrorCode(null);
+    const profile = {
+      firstName,
+      lastName,
+    }
+
+    Accounts.createUser({ email, password, profile }, error => {
+      if( !error ) {
+        console.log('Account created!');
         history.push("/");
       } else {
-        setErrorCode(err.error);
-        setErrorMessage(err.reason);
-        console.log(err);
+        console.log(error);
       }
     });
+
 
   }
 }
 
-export default Login;
+export default Register;
