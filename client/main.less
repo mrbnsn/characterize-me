@@ -9,6 +9,9 @@
 .flex-column { flex-direction: column; }
 .align-center { align-items: center; }
 .justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-no-wrap { flex-wrap: nowrap; }
 
 /* Basic Typography */
 .text-center { text-align: center; }
@@ -21,9 +24,14 @@
 .app-bar {
     background-color: rgb(90,90,90);
     color: rgb(200,200,200);
+
+    .app-bar-title {
+        margin: 0;
+    }
 }
 
 // Character Cards
 .character-card {
-    height: 300px;
+    // min-height: 300px;
+    // max-width: 400px;
 }

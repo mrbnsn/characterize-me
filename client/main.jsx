@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import Characters from '/imports/api/characters';
+import 'semantic-ui-css/semantic.min.css';
 
 import App from '/imports/ui/App';
 import Register from '/imports/ui/screens/Register';

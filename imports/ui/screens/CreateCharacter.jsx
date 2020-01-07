@@ -60,7 +60,7 @@ const CreateCharacter = (props) => {
                             onChange={handleChange}
                         />
                         <Button color='red' fluid size='large'>
-                            Create!
+                            Create
                         </Button>
                     </Segment>
                 </Form>

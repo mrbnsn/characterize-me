@@ -8,9 +8,6 @@ import { client } from '/client/main';
 
 const App = () => {
 
-  console.log(Meteor.user());
-  console.log(Meteor.userId());
-
   return (
     <div>
       <div>

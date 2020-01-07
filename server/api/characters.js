@@ -48,6 +48,39 @@ Meteor.methods({
                 message: 'Must be logged in to create a character',
             }
         }
+    }, 
+
+    fetchUserCharacters() {
+
+        const user = Meteor.user();
+        let characters = [];
+
+        if( user ) {
+
+            characters = Characters.find({ user_id: user._id }).fetch();
+            console.log(characters);
+            
+            if( characters.length ) {
+                return {
+                    success: true,
+                    message: 'User characters successfully retrieved',
+                    characters,
+                }
+            } else {
+                return {
+                    success: false,
+                    message: 'Unable to fetch user characters',
+                    characters,
+                }
+            }
+
+        } else {
+            return {
+                success: false,
+                message: 'Must be logged in to fetch characters',
+                characters,
+            }
+        }
     }
 
 });
