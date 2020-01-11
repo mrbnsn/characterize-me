@@ -27,7 +27,7 @@ const Login = (props) => {
           Sign in to your account
         </Header>
         <Form size='large' onSubmit={handleSubmit}>
-          <Segment stacked>
+          <Segment>
             <Form.Input 
               fluid 
               icon='envelope' 

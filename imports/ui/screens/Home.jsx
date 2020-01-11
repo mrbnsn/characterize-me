@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 
 import { useHistory } from "react-router-dom";
-import { Button, Card, Image, Icon, Grid } from 'semantic-ui-react';
 
 import Box from '/imports/ui/components/layout/Box';
 import CharacterCard from '/imports/ui/components/cards/CharacterCard';
@@ -13,9 +12,6 @@ const Home = (props) => {
   let [ characters, setCharacters ] = useState([]);
   let history = useHistory();
 
-  console.log('characters:');
-  console.log(characters);
-
   useEffect(() => {
     fetchUserCharacters();
   }, []);
@@ -24,8 +20,6 @@ const Home = (props) => {
       <Box>
         {renderCharacters()}
       </Box>
-      
-      // <Button color='red' fluid size='small' onClick={handleLogout}>Logout</Button>
   );
 
   function renderCharacters()
@@ -66,18 +60,6 @@ const Home = (props) => {
   function handleCreateCharacter() 
   {
     history.push("/create-character");
-  }
-
-  function handleLogout() 
-  {
-    Meteor.logout((err) => {
-      if( !err ) {
-        history.push("/");
-      } else {
-        console.log(err);
-      }
-      
-    });
   }
 }
 

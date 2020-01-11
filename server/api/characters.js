@@ -50,6 +50,11 @@ Meteor.methods({
         }
     }, 
 
+    /**
+     * Fetch all characters belonging to the current user.
+     * 
+     * @return object
+     */
     fetchUserCharacters() {
 
         const user = Meteor.user();
@@ -58,8 +63,6 @@ Meteor.methods({
         if( user ) {
 
             characters = Characters.find({ user_id: user._id }).fetch();
-            console.log(characters);
-            
             if( characters.length ) {
                 return {
                     success: true,

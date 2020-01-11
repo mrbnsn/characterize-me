@@ -13,8 +13,6 @@ const CreateCharacter = (props) => {
 
     let history = useHistory();
 
-    console.log(Meteor.user());
-
     return (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
             <Grid.Column style={{ maxWidth: 450 }}>
@@ -22,7 +20,7 @@ const CreateCharacter = (props) => {
                     Create new character
                 </Header>
                 <Form size='large' onSubmit={handleSubmit}>
-                    <Segment stacked>
+                    <Segment>
                         <Form.Input 
                             fluid 
                             icon='address card' 

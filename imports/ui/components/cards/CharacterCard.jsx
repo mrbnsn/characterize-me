@@ -7,23 +7,27 @@ const CharacterCard = (props) => {
     return (
         <Box className="pad20">
           <Card className='character-card' onClick={() => {}}>
-            <Image src='https://via.placeholder.com/150' wrapped ui={false} />
+            <Image src='https://via.placeholder.com/250' wrapped ui={false} />
             <Card.Content>
                 <Card.Header>{char.fullname}</Card.Header>
-                <Card.Meta>
-                    <span className='date'>{char.characterClass}</span>
-                </Card.Meta>
-                <Card.Description>
-                    {char.backstory}
-                </Card.Description>
+                <Card.Description>{char.domain}</Card.Description>
             </Card.Content>
-            <Card.Content extra>
-                <Icon name='user' />
-                {char.race}
-            </Card.Content>
+            {renderAttributes()}
           </Card>
         </Box>
     );
+
+    function renderAttributes() {
+        let attributes = char.attributes || [];
+        return attributes.map( (att, idx) => {
+            return (
+                <Card.Content key={idx}>
+                    <Card.Header>{att.title}</Card.Header>
+                    <Card.Meta>{att.description}</Card.Meta>
+                </Card.Content>
+            );
+        });
+    }
 };
 
 export default CharacterCard
