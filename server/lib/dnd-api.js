@@ -17,9 +17,8 @@ export default class DnDApi {
     async request( endpoint, params={} ) {
         try {
             const response = await axios.get(this.base_url + endpoint, params);
-            console.log(response);
+            return response.data;
             
-            return response;
         } catch (error) {
             console.error(error);
         }

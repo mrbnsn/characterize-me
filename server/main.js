@@ -1,19 +1,13 @@
 import { Meteor } from 'meteor/meteor';
-import { Promise } from 'meteor/promise';
-import { Accounts } from 'meteor/accounts-base';
 
 import Characters from '/imports/api/characters';
 import '/server/api/users';
 import '/server/api/characters';
-
-import DnDApi from '/server/api/dnd-api';
+import '/server/api/dnd5e';
 
 class ServerApp {
-    dnd;
 
-    constructor() {
-        this.dnd = new DnDApi();
-    }
+    constructor() {}
 
     createDefaultCharacters() {
         const characters = Characters.find({});
@@ -62,6 +56,8 @@ const server = new ServerApp();
 Meteor.startup(() => {
 
     // server.createDefaultCharacters();
-    // server.dnd.request('spells');
   
 });
+
+
+export default server

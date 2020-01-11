@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Link, useHistory } from "react-router-dom";
 
-import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Message, Segment, Select } from 'semantic-ui-react';
 
 const CreateCharacter = (props) => {
 
@@ -10,56 +10,30 @@ const CreateCharacter = (props) => {
     let [ characterClass, setCharacterClass ] = useState("");
     let [ race, setRace ] = useState("");
     let [ backstory, setBackstory ] = useState("");
+    let [ classes, setClasses ] = useState([]);
 
     let history = useHistory();
+
+    useEffect(() => {
+        fetchClasses();
+      }, []);
 
     return (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
             <Grid.Column style={{ maxWidth: 450 }}>
-                <Header as='h2' color='red' textAlign='center'>
-                    Create new character
-                </Header>
                 <Form size='large' onSubmit={handleSubmit}>
                     <Segment>
-                        <Form.Input 
-                            fluid 
-                            icon='address card' 
-                            iconPosition='left' 
-                            placeholder='Full name' 
-                            name='fullname'
-                            type='text'
-                            onChange={handleChange}
-                        />
-                        <Form.Input
+                        <Select
+                            // TODO: look into other component attribute options here
                             fluid
-                            icon='edit'
-                            iconPosition='left'
-                            placeholder='Class'
+                            placeholder='Select your class' 
                             name='characterClass'
-                            type='text'
                             onChange={handleChange}
+                            options={classes}
                         />
-                        <Form.Input
-                            fluid
-                            icon='edit'
-                            iconPosition='left'
-                            placeholder='Race'
-                            name='race'
-                            type='text'
-                            onChange={handleChange}
-                        />
-                        <Form.Input
-                            fluid
-                            icon='edit'
-                            iconPosition='left'
-                            placeholder='Backstory'
-                            name='backstory'
-                            type='textarea'
-                            onChange={handleChange}
-                        />
-                        <Button color='red' fluid size='large'>
+                        {/* <Button color='red' fluid size='large'>
                             Create
-                        </Button>
+                        </Button> */}
                     </Segment>
                 </Form>
             </Grid.Column>
@@ -74,6 +48,9 @@ const CreateCharacter = (props) => {
      */
     function handleChange(e, { name, value }) 
     {
+        console.log(name);
+        console.log(value);
+
         switch( name ) {
             case "fullname":
                 setFullname(value);
@@ -107,6 +84,36 @@ const CreateCharacter = (props) => {
             }
         });
 
+    }
+
+    /**
+     * Fetch classes from dnd5e api and map results to
+     * options array for select input. 
+     * 
+     */
+    function fetchClasses()
+    {
+        Meteor.call( 'getClasses', (err, res) => {
+
+            if( !err ) {
+                const options = res.map( cl => {
+                    return {
+                        key: cl.index,
+                        value: cl.name,
+                        text: cl.name,
+                        url: cl.url,
+                    }
+                });
+                
+                setClasses(options);
+                return res;
+
+            } else {
+                console.log(err);
+                return err;
+            }
+
+        });
     }
 }
 
