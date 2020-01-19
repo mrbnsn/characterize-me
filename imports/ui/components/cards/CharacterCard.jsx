@@ -4,30 +4,20 @@ import Box from '/imports/ui/components/layout/Box';
 
 const CharacterCard = (props) => {
     const char = props.character;
+    console.log(char);
     return (
         <Box className="pad20">
           <Card className='character-card' onClick={() => {}}>
-            <Image src='https://via.placeholder.com/250' wrapped ui={false} />
             <Card.Content>
-                <Card.Header>{char.fullname}</Card.Header>
-                <Card.Description>{char.domain}</Card.Description>
+                <Card.Header>{char.fullName}</Card.Header>
+                <Card.Meta>{char.nickname}</Card.Meta>
+                <Card.Meta>{char.race}</Card.Meta>
+                <Card.Meta>{char.characterClass}</Card.Meta>
+                <Card.Meta>{char.background}</Card.Meta>
             </Card.Content>
-            {renderAttributes()}
           </Card>
         </Box>
     );
-
-    function renderAttributes() {
-        let attributes = char.attributes || [];
-        return attributes.map( (att, idx) => {
-            return (
-                <Card.Content key={idx}>
-                    <Card.Header>{att.title}</Card.Header>
-                    <Card.Meta>{att.description}</Card.Meta>
-                </Card.Content>
-            );
-        });
-    }
 };
 
 export default CharacterCard

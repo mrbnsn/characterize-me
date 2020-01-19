@@ -1,40 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Link, useHistory } from "react-router-dom";
 
-import { Button, Form, Grid, Header, Message, Segment, Select } from 'semantic-ui-react';
+import { Form, Grid, Segment, Label, Input, Select, Button } from 'semantic-ui-react';
 
 const CreateCharacter = (props) => {
 
-    let [ fullname, setFullname ] = useState("");
-    let [ characterClass, setCharacterClass ] = useState("");
+    let [ fullName, setFullName ] = useState("");
+    let [ nickname, setNickname ] = useState("");
     let [ race, setRace ] = useState("");
-    let [ backstory, setBackstory ] = useState("");
+    let [ characterClass, setCharacterClass ] = useState("");
+    let [ background, setBackground ] = useState("");
+    let [ races, setRaces ] = useState([]);
     let [ classes, setClasses ] = useState([]);
+    let [ backgrounds, setBackgrounds ] = useState([]);
 
-    let history = useHistory();
+    console.log(races);
+    console.log(classes);
 
     useEffect(() => {
-        fetchClasses();
+        if( !races.length ){
+            fetchRaces();
+        }
+        
+        if( !classes.length ){
+            fetchClasses();
+        }
+
+        if( !backgrounds.length ){
+            fetchBackgrounds();
+        }
+        
       }, []);
 
     return (
-        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+        <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle' padded>
             <Grid.Column style={{ maxWidth: 450 }}>
                 <Form size='large' onSubmit={handleSubmit}>
-                    <Segment>
+                    <Segment raised textAlign='left'>
+                        <Label attached='top'>Full Name</Label>
+                        <Input
+                            fluid
+                            placeholder='Full name'
+                            name='fullName'
+                            onChange={handleChange}
+                            value={fullName}
+                        />
+                    </Segment>
+                    <Segment raised textAlign='left'>
+                        <Label attached='top'>Nickname</Label>
+                        <Input
+                            fluid
+                            placeholder='Nickname'
+                            name='nickname'
+                            onChange={handleChange}
+                            value={nickname}
+                        />
+                    </Segment>
+                    <Segment raised textAlign='left'>
+                        <Label attached='top'>Race</Label>
                         <Select
-                            // TODO: look into other component attribute options here
+                            fluid
+                            placeholder='Select your race' 
+                            name='race'
+                            onChange={handleChange}
+                            options={races}
+                        />
+                    </Segment>
+                    <Segment raised textAlign='left'>
+                        <Label attached='top'>Class</Label>
+                        <Select
                             fluid
                             placeholder='Select your class' 
                             name='characterClass'
                             onChange={handleChange}
                             options={classes}
                         />
-                        {/* <Button color='red' fluid size='large'>
-                            Create
-                        </Button> */}
                     </Segment>
+                    <Segment raised textAlign='left'>
+                        <Label attached='top'>Background</Label>
+                        <Select
+                            fluid
+                            placeholder='Select your background' 
+                            name='background'
+                            onChange={handleChange}
+                            options={backgrounds}
+                        />
+                    </Segment>
+                    <Segment raised >
+                        <Button color='red' fluid size='large'>
+                            Create
+                        </Button>
+                    </Segment>
+                    
                 </Form>
             </Grid.Column>
         </Grid>
@@ -48,12 +105,13 @@ const CreateCharacter = (props) => {
      */
     function handleChange(e, { name, value }) 
     {
-        console.log(name);
-        console.log(value);
 
         switch( name ) {
-            case "fullname":
-                setFullname(value);
+            case "fullName":
+                setFullName(value);
+                break;
+            case "nickname":
+                setNickname(value);
                 break;
             case "characterClass":
                 setCharacterClass(value);
@@ -61,8 +119,8 @@ const CreateCharacter = (props) => {
             case "race":
                 setRace(value);
                 break;
-            case "backstory":
-                setBackstory(value);
+            case "background":
+                setBackground(value);
                 break;
                 
             default:
@@ -76,7 +134,7 @@ const CreateCharacter = (props) => {
      */
     function handleSubmit() 
     {
-        Meteor.call( 'createCharacter', { fullname, characterClass, race, backstory }, (err, res) => {
+        Meteor.call( 'createCharacter', { fullName, nickname, characterClass, race, background }, (err, res) => {
             if( !err ) {
                 console.log(res);
             } else {
@@ -84,6 +142,36 @@ const CreateCharacter = (props) => {
             }
         });
 
+    }
+
+    /**
+     * Fetch races from dnd5e api and map results to
+     * options array for select input. 
+     * 
+     */
+    function fetchRaces()
+    {
+        Meteor.call( 'getRaces', (err, res) => {
+
+            if( !err ) {
+                const options = res.map( r => {
+                    return {
+                        key: r.index,
+                        value: r.name,
+                        text: r.name,
+                        url: r.url,
+                    }
+                });
+                
+                setRaces(options);
+                return res;
+
+            } else {
+                console.log(err);
+                return err;
+            }
+
+        });
     }
 
     /**
@@ -96,16 +184,47 @@ const CreateCharacter = (props) => {
         Meteor.call( 'getClasses', (err, res) => {
 
             if( !err ) {
-                const options = res.map( cl => {
+                const options = res.map( r => {
                     return {
-                        key: cl.index,
-                        value: cl.name,
-                        text: cl.name,
-                        url: cl.url,
+                        key: r.index,
+                        value: r.name,
+                        text: r.name,
+                        url: r.url,
                     }
                 });
                 
                 setClasses(options);
+                return res;
+
+            } else {
+                console.log(err);
+                return err;
+            }
+
+        });
+    }
+
+    /**
+     * Fetch backgrounds from open5e api and map results to
+     * options array for select input. 
+     * 
+     */
+    function fetchBackgrounds()
+    {
+        Meteor.call( 'getBackgrounds', (err, res) => {
+
+            if( !err ) {
+                const options = res.map( r => {
+                    return {
+                        key: r.slug,
+                        value: r.name,
+                        text: r.name,
+                        url: r.url,
+                    }
+                });
+                
+                setBackgrounds(options);
+                console.log(res);
                 return res;
 
             } else {

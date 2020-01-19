@@ -8,7 +8,7 @@ Meteor.methods({
      * 
      * @param {*} param0 
      */
-    createCharacter({ fullname, characterClass, race, backstory }) {
+    createCharacter({ fullName, nickname, characterClass, race, background }) {
 
         const user = Meteor.user();
         if( user ) {
@@ -16,10 +16,11 @@ Meteor.methods({
             // Insert new character.
             const character_id = Characters.insert({
                 user_id: user._id,
-                fullname,
+                fullName,
+                nickname,
                 characterClass,
                 race,
-                backstory,
+                background,
                 createdAt: new Date(),
             });
 
